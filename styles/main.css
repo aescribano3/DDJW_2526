@@ -1,3 +1,7 @@
+body{
+	background-color: black;
+}
+
 #title, .center{
 	display: block;
 	margin-left: auto;
