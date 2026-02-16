@@ -27,6 +27,7 @@ button.center{
 }
 
 #title{
-	color:red;
+	color:white;
 	text-align: center;
+	text-decoration: underline;
 }
