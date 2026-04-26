@@ -1,10 +1,14 @@
 import {$} from "../library/jquery-4.0.0.slim.module.min.js";
 
+var modal = $("#choseMode");
+var span = $(".close");
+
 addEventListener('load', function() {
     document.getElementById('play').addEventListener('click', 
     function(){
-        sessionStorage.removeItem('load');
-        window.location.assign("./html/game.html");
+        modal.css("display", "block");
+        //sessionStorage.removeItem('load');
+        //window.location.assign("./html/game.html");
     });
 
     document.getElementById('options').addEventListener('click', 
@@ -34,6 +38,11 @@ addEventListener('load', function() {
         sessionStorage.load = to_load;
         window.location.assign("./html/game.html");
     });
+});
+
+span.click(function(){
+    modal.css("display", "none");
+});
 
 var optionsButton = $('#options');
 optionsButton.on('click', function (){
