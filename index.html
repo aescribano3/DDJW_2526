@@ -1,29 +1,31 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<script src="./js/main.js" type="module"></script>
-		<link rel="stylesheet" 
-			href="./styles/main.css">
-		<title> Memory - Menú </title>
+		<link rel="stylesheet" href="./styles/main.css">
+		<title>Memory - Menú</title>
 	</head>
 	<body>
-		<h1 id="title">Menú</h1>
+		<h1 id="title">Memory</h1>
 		<div class="menu-panel">
 			<button id="play" class="center">Jugar</button>
-			<button id="options" class="center">Opcions</button>
-			<button id="load" class="center">Partides</button>
+			<button id="scores" class="center">Puntuacions</button>
+			<button id="load" class="center">Carregar</button>
 			<button id="exit" class="center">Sortir</button>
 		</div>
 
-		<!--Modal modes de joc-->
 		<div id="choseMode" class="modal">
-            <div class="modal-content">
-              <span class="close">&times;</span>
-			  <h2>Tria el mode de joc</h2>
-			  <button id="mode1" class="center">Mode 1</button>
-			  <button id="mode2" class="center">Mode 2</button>
-            </div>
-		</div>
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<h2>Tria el mode de joc</h2>
 
+				<label for="alias">Àlies del jugador</label>
+				<input id="alias" type="text" maxlength="16" placeholder="Escriu el teu àlies">
+
+				<button id="mode1" class="center">Mode 1</button>
+				<button id="mode2" class="center">Mode 2</button>
+			</div>
+		</div>
 	</body>
 </html>

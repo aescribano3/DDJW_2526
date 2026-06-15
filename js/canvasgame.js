@@ -20,9 +20,6 @@ if (canvas){
 
 function start(){
 	selectCards();
-	const info = getGameInfo();
-	$('#game-title').text(info.mode === 2 ? 'Mode 2' : 'Mode 1');
-	$('#info-mode').text(info.mode === 2 ? 'Mode 2' : 'Mode 1');
 	const columns = Math.min(6, Math.ceil(Math.sqrt(gameItems.length)));
 	const startX = 30;
 	const startY = topMargin;
@@ -85,13 +82,9 @@ function draw(){
 
 function updateHud(){
 	const info = getGameInfo();
-	$('#info-score').text(`Punts nivell: ${info.score}`);
-	$('#info-total').text(`Total: ${info.totalScore}`);
+	$('#info-score').text(`Punts: ${info.score}`);
 	$('#info-groups').text(`Grups pendents: ${info.groupsLeft}`);
-	$('#info-difficulty').text(info.mode === 2 ? `Dificultat: ${info.difficulty}` : `Dificultat: ${info.difficulty}`);
-	$('#info-level').text(`Nivell: ${info.level}`);
-	$('#info-level').toggle(info.mode === 2);
-	$('#info-total').toggle(info.mode === 2);
+	$('#info-difficulty').text(`Dificultat: ${info.difficulty}`);
 }
 
 function checkInput(){

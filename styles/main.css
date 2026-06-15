@@ -153,3 +153,22 @@ select, input{
 a{
 	color:var(--text);
 }
+
+.muted{
+	color:var(--muted);
+	font-weight:700;
+	margin:0 0 18px 0;
+}
+
+.list-box{
+	width:100%;
+	background:#ffffff;
+	border:2px solid var(--border);
+	border-radius:12px;
+	padding:14px;
+	text-align:left;
+}
+
+.list-box p{
+	margin:8px 0;
+}
