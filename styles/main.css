@@ -172,3 +172,41 @@ a{
 .list-box p{
 	margin:8px 0;
 }
+
+.small-text{
+	font-size:14px;
+	line-height:1.4;
+	margin-top:10px;
+}
+
+#scores-list{
+	margin:0;
+	padding-left:24px;
+}
+
+#scores-list li{
+	margin:10px 0;
+	line-height:1.4;
+}
+
+.save-card{
+	border:2px solid var(--border);
+	border-radius:10px;
+	padding:14px;
+	margin:12px 0;
+	background:#ffffff;
+}
+
+.save-card p{
+	margin:6px 0;
+}
+
+.compact-actions{
+	margin-top:10px;
+	justify-content:flex-start;
+}
+
+.compact-actions button{
+	padding:8px 12px;
+	font-size:14px;
+}

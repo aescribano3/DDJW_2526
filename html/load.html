@@ -3,17 +3,16 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Carregar partida</title>
+		<script src="../js/load.js" type="module"></script>
 		<link rel="stylesheet" href="../styles/main.css">
 	</head>
 	<body>
 		<div class="page-panel">
 			<h1>Carregar partida</h1>
-			<p class="muted">El llistat de partides guardades es completarà a la issue de guardar i carregar.</p>
-			<div class="list-box">
-				<p>No hi ha partides disponibles.</p>
-			</div>
+			<p class="muted">Tria una partida guardada per continuar-la.</p>
+			<div id="save-list" class="list-box"></div>
 			<div class="actions">
-				<button onclick="window.location.assign('../')">Tornar al menú</button>
+				<button id="back">Tornar al menú</button>
 			</div>
 		</div>
 	</body>

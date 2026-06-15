@@ -82,9 +82,10 @@ function draw(){
 
 function updateHud(){
 	const info = getGameInfo();
+	$('#info-mode').text(info.mode === 2 ? `Mode 2 - Nivell ${info.level}` : 'Mode 1');
 	$('#info-score').text(`Punts: ${info.score}`);
 	$('#info-groups').text(`Grups pendents: ${info.groupsLeft}`);
-	$('#info-difficulty').text(`Dificultat: ${info.difficulty}`);
+	$('#info-difficulty').text(`Dificultat: ${info.difficulty} · Grup: ${info.group}`);
 }
 
 function checkInput(){

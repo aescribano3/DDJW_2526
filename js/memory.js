@@ -90,6 +90,45 @@ const difficultyConfig = {
 	hard: {score: 160, penalty: 40, initialTime: 800, failTime: 500, label: "Difícil"}
 };
 
+function getAlias(){
+	return localStorage.playerAlias || "Jugador";
+}
+
+function getRanking(){
+	try{
+		return JSON.parse(localStorage.memoryRanking || "[]");
+	}
+	catch(error){
+		return [];
+	}
+}
+
+function saveRanking(score, level){
+	if (score <= 0) return;
+	const ranking = getRanking();
+	ranking.push({
+		alias: getAlias(),
+		score,
+		level,
+		date: new Date().toLocaleString()
+	});
+	ranking.sort((a, b) => b.score - a.score);
+	localStorage.memoryRanking = JSON.stringify(ranking.slice(0, 10));
+}
+
+function getSaves(){
+	try{
+		return JSON.parse(localStorage.memorySaves || "[]");
+	}
+	catch(error){
+		return [];
+	}
+}
+
+function saveSaves(saves){
+	localStorage.memorySaves = JSON.stringify(saves);
+}
+
 var game = {
 	items: [],
 	states: [],
@@ -97,6 +136,7 @@ var game = {
 	ready: 0,
 	selected: [],
 	score: 220,
+	totalScore: 0,
 	groupsLeft: 0,
 	group: 2,
 	mode: 1,
@@ -106,6 +146,10 @@ var game = {
 	initialTime: 1300,
 	failTime: 700,
 	locked: false,
+	level: 1,
+	startLevel: 1,
+	saveId: null,
+	finished: false,
 	goBack: function(idx){
 		this.setValue && this.setValue[idx](back);
 		this.states[idx] = StateCard.ENABLE;
@@ -115,22 +159,26 @@ var game = {
 		this.states[idx] = StateCard.DISABLE;
 	},
 	loadOptions: function(){
-		let options = {mode: 1, numCards: 12, group: 2, difficulty: "normal"};
+		let options = {mode: 1, numCards: 12, group: 2, difficulty: "normal", startLevel: 1};
 		if (localStorage.options){
 			try{
 				options = {...options, ...JSON.parse(localStorage.options)};
 			}
 			catch(error){
-				console.warn("No s'han pogut carregar les opcions del mode 1.");
+				console.warn("No s'han pogut carregar les opcions.");
 			}
 		}
-		this.setMode1(options);
+
+		if (options.mode === 2 || localStorage.gameMode === "mode2") this.setMode2(options);
+		else this.setMode1(options);
 	},
 	setMode1: function(options){
 		this.mode = 1;
 		this.numCards = Number(options.numCards) || 12;
 		this.group = Number(options.group) || 2;
 		this.difficulty = options.difficulty || "normal";
+		this.level = 1;
+		this.totalScore = 0;
 
 		if (!difficultyConfig[this.difficulty]) this.difficulty = "normal";
 
@@ -148,37 +196,70 @@ var game = {
 		this.failTime = config.failTime;
 		this.groupsLeft = this.numCards / this.group;
 	},
+	setMode2: function(options){
+		this.mode = 2;
+		this.startLevel = Math.max(1, Number(options.startLevel) || 1);
+		this.level = Number(options.level) || this.startLevel;
+		this.totalScore = Number(options.totalScore) || 0;
+		const initialGroup = Math.max(2, Number(options.group) || 2);
+
+		this.group = initialGroup + Math.floor((this.level - 1) / 3);
+		const numberOfGroups = Math.min(resources.length, 3 + Math.floor((this.level - 1) / 2));
+		this.numCards = numberOfGroups * this.group;
+		this.difficulty = "progressiva";
+		this.score = 180 + this.level * 35;
+		this.penalty = 15 + this.level * 5;
+		this.initialTime = Math.max(350, 1500 - this.level * 90);
+		this.failTime = Math.max(250, 750 - this.level * 25);
+		this.groupsLeft = numberOfGroups;
+	},
+	createItems: function(){
+		const neededGroups = this.numCards / this.group;
+		this.items = resources.slice(0, neededGroups);
+		let baseItems = this.items.slice();
+		for (let i = 1; i < this.group; i++){
+			this.items = this.items.concat(baseItems);
+		}
+		shuffle(this.items);
+		this.states = new Array(this.items.length).fill(StateCard.ENABLE);
+	},
+	loadSavedGame: function(toLoad){
+		this.items = toLoad.items;
+		this.states = toLoad.states;
+		this.selected = toLoad.selected || [];
+		this.score = toLoad.score;
+		this.totalScore = toLoad.totalScore || 0;
+		this.groupsLeft = toLoad.groupsLeft ?? 0;
+		this.group = toLoad.group;
+		this.difficulty = toLoad.difficulty || "normal";
+		this.mode = toLoad.mode || 1;
+		this.numCards = this.items.length;
+		this.level = toLoad.level || 1;
+		this.startLevel = toLoad.startLevel || 1;
+		this.saveId = toLoad.saveId || null;
+		this.penalty = toLoad.penalty || (difficultyConfig[this.difficulty] || difficultyConfig.normal).penalty;
+		this.initialTime = toLoad.initialTime || (difficultyConfig[this.difficulty] || difficultyConfig.normal).initialTime;
+		this.failTime = toLoad.failTime || (difficultyConfig[this.difficulty] || difficultyConfig.normal).failTime;
+	},
 	select: function(){
 		this.ready = 0;
 		this.selected = [];
 		this.locked = false;
+		this.finished = false;
 
 		if (sessionStorage.load){
-			let toLoad = JSON.parse(sessionStorage.load);
-			this.items = toLoad.items;
-			this.states = toLoad.states;
-			this.selected = toLoad.selected || [];
-			this.score = toLoad.score;
-			this.groupsLeft = toLoad.groupsLeft ?? toLoad.pairs ?? 0;
-			this.group = toLoad.group;
-			this.difficulty = toLoad.difficulty || "normal";
-			this.mode = toLoad.mode || 1;
-			this.numCards = this.items.length;
-			const config = difficultyConfig[this.difficulty] || difficultyConfig.normal;
-			this.penalty = config.penalty;
-			this.initialTime = config.initialTime;
-			this.failTime = config.failTime;
+			this.loadSavedGame(JSON.parse(sessionStorage.load));
+			sessionStorage.removeItem('load');
+		}
+		else if (sessionStorage.nextMode2Level){
+			const next = JSON.parse(sessionStorage.nextMode2Level);
+			sessionStorage.removeItem('nextMode2Level');
+			this.setMode2(next);
+			this.createItems();
 		}
 		else{
 			this.loadOptions();
-			const neededGroups = this.numCards / this.group;
-			this.items = resources.slice(0, neededGroups);
-			let baseItems = this.items.slice();
-			for (let i = 1; i < this.group; i++){
-				this.items = this.items.concat(baseItems);
-			}
-			shuffle(this.items);
-			this.states = new Array(this.items.length).fill(StateCard.ENABLE);
+			this.createItems();
 		}
 	},
 	start: function(){
@@ -195,7 +276,7 @@ var game = {
 		});
 	},
 	click: function(indx){
-		if (this.locked || this.states[indx] !== StateCard.ENABLE || this.ready < this.items.length || this.selected.length >= this.group) return;
+		if (this.locked || this.finished || this.states[indx] !== StateCard.ENABLE || this.ready < this.items.length || this.selected.length >= this.group) return;
 
 		this.goFront(indx);
 		this.selected.push(indx);
@@ -211,7 +292,9 @@ var game = {
 				cardsToHide.forEach(i => this.goBack(i));
 				this.locked = false;
 				if (this.score <= 0){
-					alert("Has perdut");
+					this.finished = true;
+					if (this.mode === 2) saveRanking(this.totalScore, this.level);
+					alert(this.mode === 2 ? `Has perdut. Puntuació final: ${this.totalScore}` : "Has perdut");
 					window.location.assign("../");
 				}
 			}, this.failTime);
@@ -223,34 +306,82 @@ var game = {
 			this.groupsLeft--;
 			this.selected = [];
 			if (this.groupsLeft <= 0){
-				alert(`Has guanyat amb ${this.score} punts!`);
-				window.location.assign("../");
+				this.finished = true;
+				if (this.mode === 2){
+					const newTotal = this.totalScore + this.score;
+					alert(`Nivell ${this.level} superat! Puntuació acumulada: ${newTotal}`);
+					sessionStorage.nextMode2Level = JSON.stringify({
+						mode: 2,
+						level: this.level + 1,
+						startLevel: this.startLevel,
+						group: Math.max(2, Number(JSON.parse(localStorage.options || '{}').group) || 2),
+						totalScore: newTotal
+					});
+					window.location.reload();
+				}
+				else{
+					alert(`Has guanyat amb ${this.score} punts!`);
+					window.location.assign("../");
+				}
 			}
 		}
 	},
 	save: function(){
-		let to_save = JSON.stringify({
+		const now = new Date().toLocaleString();
+		const state = {
 			items: this.items,
 			states: this.states,
 			selected: this.selected,
 			score: this.score,
+			totalScore: this.totalScore,
 			groupsLeft: this.groupsLeft,
 			group: this.group,
 			difficulty: this.difficulty,
-			mode: this.mode
-		});
-		localStorage.save = to_save;
+			mode: this.mode,
+			level: this.level,
+			startLevel: this.startLevel,
+			penalty: this.penalty,
+			initialTime: this.initialTime,
+			failTime: this.failTime,
+			saveId: this.saveId
+		};
+
+		let saves = getSaves();
+		if (!this.saveId){
+			this.saveId = `save-${Date.now()}`;
+			state.saveId = this.saveId;
+		}
+
+		const entry = {
+			id: this.saveId,
+			alias: getAlias(),
+			mode: this.mode,
+			level: this.level,
+			score: this.mode === 2 ? this.totalScore + this.score : this.score,
+			date: now,
+			state
+		};
+
+		const index = saves.findIndex(save => save.id === this.saveId);
+		if (index >= 0) saves[index] = entry;
+		else saves.push(entry);
+
+		saveSaves(saves);
 		console.warn("La partida s'ha guardat en local.");
+		alert("La partida s'ha guardat correctament.");
 		window.location.assign("../");
 	},
 	getInfo: function(){
 		return {
-			score: this.score,
+			score: this.mode === 2 ? this.totalScore + this.score : this.score,
+			levelScore: this.score,
+			totalScore: this.totalScore,
 			groupsLeft: this.groupsLeft,
 			group: this.group,
-			difficulty: difficultyConfig[this.difficulty]?.label || this.difficulty,
+			difficulty: this.mode === 2 ? "Progressiva" : (difficultyConfig[this.difficulty]?.label || this.difficulty),
 			numCards: this.numCards,
-			mode: this.mode
+			mode: this.mode,
+			level: this.level
 		};
 	}
 };

@@ -9,44 +9,61 @@
 
 	<body>
 		<div class="options-panel">
-		<h2>Opcions Mode 1</h2>
+			<h2 id="options-title">Opcions</h2>
 
-		<label for="numCards">Número de cartes</label>
-		<select id="numCards">
-			<option value="6">6</option>
-			<option value="8">8</option>
-			<option value="9">9</option>
-			<option value="10">10</option>
-			<option value="12">12</option>
-			<option value="16">16</option>
-			<option value="20">20</option>
-			<option value="24">24</option>
-		</select>
+			<div id="mode1-options">
+				<label for="numCards">Número de cartes</label>
+				<select id="numCards">
+					<option value="6">6</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+					<option value="12">12</option>
+					<option value="16">16</option>
+					<option value="20">20</option>
+					<option value="24">24</option>
+				</select>
 
-		<br><br>
+				<label for="difficulty">Dificultat</label>
+				<select id="difficulty">
+					<option value="easy">Fàcil</option>
+					<option value="normal">Normal</option>
+					<option value="hard">Difícil</option>
+				</select>
+			</div>
 
-		<label for="difficulty">Dificultat</label>
-		<select id="difficulty">
-			<option value="easy">Fàcil</option>
-			<option value="normal">Normal</option>
-			<option value="hard">Difícil</option>
-		</select>
+			<div id="mode2-options">
+				<label for="startLevel">Nivell inicial del mode 2</label>
+				<select id="startLevel">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+				</select>
 
-		<br><br>
+				<p class="muted small-text">En aquest mode la dificultat puja automàticament a cada nivell: més cartes, menys temps i més penalització.</p>
+			</div>
 
-		<label for="group">Mida del grup</label>
-		<select id="group">
-			<option value="2">Parelles</option>
-			<option value="3">Trios</option>
-			<option value="4">Quartets</option>
-		</select>
+			<label for="group">Mida inicial del grup</label>
+			<select id="group">
+				<option value="2">Parelles</option>
+				<option value="3">Trios</option>
+				<option value="4">Quartets</option>
+			</select>
 
-		<p id="warning"></p>
+			<p id="warning"></p>
 
-		<div class="actions">
-			<button id="default">Valors per defecte</button>
-			<button id="apply">Aplicar i jugar</button>
-		</div>
+			<div class="actions">
+				<button id="default">Valors per defecte</button>
+				<button id="apply">Aplicar i jugar</button>
+				<button id="back">Tornar al menú</button>
+			</div>
 		</div>
 	</body>
 </html>

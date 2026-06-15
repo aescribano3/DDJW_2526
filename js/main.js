@@ -1,46 +1,49 @@
-import {$} from "../library/jquery-4.0.0.slim.module.min.js";
+function getElement(id){
+	return document.getElementById(id);
+}
 
-const modal = $("#choseMode");
-const span = $(".close");
+function openModal(){
+	const modal = getElement("choseMode");
+	if (modal) modal.style.display = "block";
+}
+
+function closeModal(){
+	const modal = getElement("choseMode");
+	if (modal) modal.style.display = "none";
+}
 
 function saveAlias(){
-	const aliasInput = document.getElementById('alias');
+	const aliasInput = getElement("alias");
 	const alias = aliasInput ? aliasInput.value.trim() : "";
 	localStorage.playerAlias = alias || "Jugador";
 }
 
-addEventListener('load', function() {
-	document.getElementById('play')?.addEventListener('click', function () {
-		modal.css("display", "block");
+function goToOptions(mode){
+	saveAlias();
+	localStorage.gameMode = mode;
+	closeModal();
+	window.location.href = "./html/options.html";
+}
+
+window.addEventListener("DOMContentLoaded", function(){
+	getElement("play")?.addEventListener("click", openModal);
+	getElement("mode1")?.addEventListener("click", function(){ goToOptions("mode1"); });
+	getElement("mode2")?.addEventListener("click", function(){ goToOptions("mode2"); });
+
+	getElement("scores")?.addEventListener("click", function(){
+		window.location.href = "./html/scores.html";
 	});
 
-	document.getElementById('mode1')?.addEventListener('click', function () {
-		saveAlias();
-		localStorage.gameMode = "mode1";
-		modal.css("display", "none");
-		window.location.assign("./html/options.html");
+	getElement("load")?.addEventListener("click", function(){
+		window.location.href = "./html/load.html";
 	});
+	
+	getElement("close-modal")?.addEventListener("click", closeModal);
+	const closeButton = document.querySelector(".close");
+	if (closeButton) closeButton.addEventListener("click", closeModal);
 
-	document.getElementById('mode2')?.addEventListener('click', function () {
-		saveAlias();
-		localStorage.gameMode = "mode2";
-		modal.css("display", "none");
-		window.location.assign("./html/options.html");
+	window.addEventListener("click", function(event){
+		const modal = getElement("choseMode");
+		if (modal && event.target === modal) closeModal();
 	});
-
-	document.getElementById('scores')?.addEventListener('click', function () {
-		window.location.assign("./html/scores.html");
-	});
-
-	document.getElementById('load')?.addEventListener('click', function () {
-		window.location.assign("./html/load.html");
-	});
-
-	document.getElementById('exit')?.addEventListener('click', function () {
-		window.close();
-	});
-});
-
-span.click(function(){
-	modal.css("display", "none");
 });
