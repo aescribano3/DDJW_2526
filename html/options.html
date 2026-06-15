@@ -2,43 +2,47 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Options</title>
+		<title>Opcions</title>
 		<script src="../js/options.js" type="module"></script>
+		<link rel="stylesheet" href="../styles/main.css">
 	</head>
 
 	<body>
-
 		<h2>Opcions Mode 1</h2>
 
-		<label>Número de cartes</label>
-		<select id="pairs">
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
+		<label for="numCards">Número de cartes</label>
+		<select id="numCards">
 			<option value="6">6</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="12">12</option>
+			<option value="16">16</option>
+			<option value="20">20</option>
+			<option value="24">24</option>
 		</select>
 
 		<br><br>
 
-		<label>Dificultat</label>
+		<label for="difficulty">Dificultat</label>
 		<select id="difficulty">
-			<option value="easy">Easy</option>
+			<option value="easy">Fàcil</option>
 			<option value="normal">Normal</option>
-			<option value="hard">Hard</option>
+			<option value="hard">Difícil</option>
 		</select>
 
 		<br><br>
 
-		<label>Mida del grup</label>
+		<label for="group">Mida del grup</label>
 		<select id="group">
 			<option value="2">Parelles</option>
 			<option value="3">Trios</option>
 			<option value="4">Quartets</option>
-			</select>
+		</select>
 
-		<br><br>
+		<p id="warning"></p>
 
+		<button id="default">Valors per defecte</button>
 		<button id="apply">Aplicar i jugar</button>
 	</body>
 </html>
