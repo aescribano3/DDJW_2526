@@ -4,19 +4,33 @@ var modal = $("#choseMode");
 var span = $(".close");
 
 addEventListener('load', function() {
-    document.getElementById('play').addEventListener('click', 
-    function(){
-        modal.css("display", "block");
-        //sessionStorage.removeItem('load');
-        //window.location.assign("./html/game.html");
-    });
+	document.getElementById('play').addEventListener('click', function () {
+		modal.css("display", "block");
+	});
 
-    document.getElementById('options').addEventListener('click', 
-    function(){
-        window.location.assign("./html/options.html");
-    });
+	document.getElementById('mode1').addEventListener('click', function () {
+		localStorage.gameMode = "mode1";
+		modal.css("display", "none");
+		window.location.assign("./html/options.html");
+	});
+	document.getElementById('mode2').addEventListener('click', function () {
+		localStorage.gameMode = "mode2";
+		modal.css("display", "none");
+		window.location.assign("./html/options.html");
+	});
+	document.getElementById('scores').addEventListener('click', function () {
+		window.location.assign("./html/scores.html");
+	});
 
-    document.getElementById('saves').addEventListener('click', 
+	document.getElementById('options').addEventListener('click', function () {
+		window.location.assign("./html/options.html");
+	});
+
+	document.getElementById('load').addEventListener('click', function () {
+		window.location.assign("./html/load.html");
+	});
+
+    /*document.getElementById('saves').addEventListener('click', 
     function(){
         let to_load = localStorage.save;
         fetch('../php/load.php', {
@@ -37,24 +51,10 @@ addEventListener('load', function() {
         }
         sessionStorage.load = to_load;
         window.location.assign("./html/game.html");
-    });
+    });*/
 });
 
 span.click(function(){
     modal.css("display", "none");
 });
 
-var optionsButton = $('#options');
-optionsButton.on('click', function (){
-    console.error("Opció no implementada");
-});
-
-var savesButton = $('#saves');
-savesButton.on('click', function (){
-    console.error("Opció no implementada");
-});
-
-var exitButton = $('#exit');
-exitButton.on('click', function (){
-    console.error("Opció no implementada");
-});

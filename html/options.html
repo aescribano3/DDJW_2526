@@ -1,20 +1,48 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 	<head>
-        <script src="../js/options.js" type="module"></script>
-		<title> Memory - Opcions </title>
+		<meta charset="UTF-8">
+		<title>Opcions</title>
+		<script src="../js/options.js" type="module"></script>
+		<link rel="stylesheet" href="../styles/main.css">
 	</head>
+
 	<body>
-		<h1>Opcions</h1>
-        <label for="pairs">Número de cartes</label>
-        <input type="number" id="pairs" value="2" min="2" max="6">
-        <label for="dif">Dificultat</label>
-        <select id="dif">
-            <option value="easy">Baixa</option>
-            <option value="normal" selected>Normal</option>
-            <option value="hard">Alta</option>
-        </select>
-        <button id="default">Per defecte</button>
-        <button id="apply">Aplicar</button>
+		<h2>Opcions Mode 1</h2>
+
+		<label for="numCards">Número de cartes</label>
+		<select id="numCards">
+			<option value="6">6</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="12">12</option>
+			<option value="16">16</option>
+			<option value="20">20</option>
+			<option value="24">24</option>
+		</select>
+
+		<br><br>
+
+		<label for="difficulty">Dificultat</label>
+		<select id="difficulty">
+			<option value="easy">Fàcil</option>
+			<option value="normal">Normal</option>
+			<option value="hard">Difícil</option>
+		</select>
+
+		<br><br>
+
+		<label for="group">Mida del grup</label>
+		<select id="group">
+			<option value="2">Parelles</option>
+			<option value="3">Trios</option>
+			<option value="4">Quartets</option>
+		</select>
+
+		<p id="warning"></p>
+
+		<button id="default">Valors per defecte</button>
+		<button id="apply">Aplicar i jugar</button>
 	</body>
 </html>
